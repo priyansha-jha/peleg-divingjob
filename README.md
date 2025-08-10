@@ -1,4 +1,4 @@
-## peleg-divingjob — Framework metadata and inventory item setup
+## peleg-divingjob 
 
 This resource supports QBCore, Qbox (qbx_core), and ESX frameworks, and integrates with ox_inventory, qb-inventory, and qs-inventory.
 
