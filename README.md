@@ -2,6 +2,9 @@
 
 This resource supports QBCore, Qbox (qbx_core), and ESX frameworks, and integrates with ox_inventory, qb-inventory, and qs-inventory.
 
+### Preview:
+https://youtu.be/ZN6ecZJHsZY
+
 ### What you need to add
 - Metadata keys stored on the player: `divingLevel` (number) and `divingXP` (number)
 - An inventory item named `diving_gear` in your inventory system
