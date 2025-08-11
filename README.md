@@ -3,7 +3,7 @@
 This resource supports QBCore, Qbox (qbx_core), and ESX frameworks, and integrates with ox_inventory, qb-inventory, and qs-inventory.
 
 ### Preview:
-https://youtu.be/ZN6ecZJHsZY
+https://youtu.be/ylXodbn1s54
 
 ### What you need to add
 - Metadata keys stored on the player: `divingLevel` (number) and `divingXP` (number)
