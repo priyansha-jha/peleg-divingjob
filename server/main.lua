@@ -263,6 +263,85 @@ RegisterNetEvent('peleg-diving:server:GiveContainerLoot', function(containerId, 
     end
 end)
 
+--- Secure server-side handler for selling diving items based on config prices.
+RegisterNetEvent('peleg-diving:server:SellItem', function(itemName, quantity)
+    local source = source
+    local Player = Bridge.GetPlayer(source)
+    if not Player then return end
+
+    if type(itemName) ~= 'string' or itemName == '' then return end
+    local unitPrice = 0
+    if Config.SellPrices and Config.SellPrices[itemName] then
+        local itemData = Config.SellPrices[itemName]
+        unitPrice = tonumber(itemData.price) or 0
+    end
+    if unitPrice <= 0 then
+        TriggerClientEvent('peleg-diving:client:notify', source,
+            { title = 'Diving', description = 'Item cannot be sold', type = 'error' })
+        return
+    end
+
+    if not IsNearAnyShop(source, 6.0) then
+        TriggerClientEvent('peleg-diving:client:notify', source,
+            { title = 'Diving', description = 'You must be at the diving shop to sell.', type = 'error' })
+        return
+    end
+
+    local hasCount = 0
+    if Bridge.Inventory == 'ox' then
+        hasCount = exports.ox_inventory:Search(source, 'count', itemName) or 0
+    elseif Bridge.Inventory == 'qs' then
+        local item = exports['qs-inventory']:GetItemByName(source, itemName)
+        hasCount = (item and item.amount or 0)
+    elseif Bridge.Inventory == 'qb' then
+        local p = Bridge.GetPlayer(source)
+        local invItem = p and p.Functions.GetItemByName and p.Functions.GetItemByName(itemName)
+        hasCount = (invItem and invItem.amount or 0)
+    end
+
+    if hasCount <= 0 then
+        TriggerClientEvent('peleg-diving:client:notify', source,
+            { title = 'Diving', description = 'You do not have this item', type = 'error' })
+        return
+    end
+
+    local qty = tonumber(quantity) or 0
+    if qty <= 0 or qty > hasCount then
+        qty = hasCount
+    end
+    if qty <= 0 then return end
+
+    local total = unitPrice * qty
+    if total <= 0 then return end
+
+    local removed = false
+    if Bridge.RemoveItem then
+        removed = Bridge.RemoveItem(source, itemName, qty)
+    else
+        if Bridge.Inventory == 'ox' then
+            removed = exports.ox_inventory:RemoveItem(source, itemName, qty)
+        elseif Bridge.Inventory == 'qs' then
+            removed = exports['qs-inventory']:RemoveItem(source, itemName, qty)
+        elseif Bridge.Inventory == 'qb' then
+            local p = Bridge.GetPlayer(source)
+            removed = p and p.Functions.RemoveItem and p.Functions.RemoveItem(itemName, qty) or false
+        end
+    end
+
+    if not removed then
+        TriggerClientEvent('peleg-diving:client:notify', source,
+            { title = 'Diving', description = 'Failed to remove items', type = 'error' })
+        return
+    end
+
+    if Bridge.AddMoney then
+        Bridge.AddMoney(source, 'cash', total, 'diving-sell')
+    end
+
+    TriggerClientEvent('peleg-diving:client:notify', source,
+        { title = 'Diving', description = ('Sold %dx %s for $%s'):format(qty, itemName, total), type = 'success' })
+end)
+
 --- Event handler for purchasing items from the diving shop.
 RegisterNetEvent('peleg-diving:server:PurchaseItem', function(itemName, quantity, _clientTotal)
     local source = source

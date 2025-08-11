@@ -90,6 +90,20 @@ function ShowDivingJobMenu(zoneIndex)
                 end
             },
             {
+                title = 'Sell Diving Loot',
+                description = 'Sell items you found while diving',
+                icon = 'fas fa-dollar-sign',
+                iconColor = '#ffd54f',
+                onSelect = function()
+                    if zoneIndex == nil then
+                        local zi = GetNearestZoneIndex()
+                        OpenSellMenu(zi)
+                    else
+                        OpenSellMenu(zoneIndex)
+                    end
+                end
+            },
+            {
                 title = 'Diving Zones',
                 description = 'View available diving locations',
                 icon = 'fas fa-map-marker-alt',

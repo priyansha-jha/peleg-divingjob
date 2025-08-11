@@ -22,6 +22,7 @@ client_scripts {
     'client/containers.lua',
     'client/rental.lua',
     'client/zones.lua',
+    'client/anchor.lua',
 }
 
 server_scripts {

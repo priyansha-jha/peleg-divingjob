@@ -69,6 +69,16 @@ function CreateShopPed(pedConfig)
             ShowDivingJobMenu(nil)
         end
     })
+
+    Bridge.Target.AddPed(ped, {
+        name = 'diving_job_menu_sell',
+        icon = 'fas fa-dollar-sign',
+        label = 'Sell Diving Loot',
+        distance = Config.TargetDistance or 2.5,
+        onSelect = function()
+            OpenSellMenu(nil)
+        end
+    })
 end
 
 function CreateZoneBlip(zoneIndex, blipConfig, zoneCoords)
@@ -210,10 +220,79 @@ function PurchaseItem(item)
     end
 end
 
+--- Opens the sell menu for diving loot based on config sell prices.
+--- @param zoneIndex number|nil
+function OpenSellMenu(zoneIndex)
+    if not Config.SellPrices or next(Config.SellPrices) == nil then
+        lib.notify({ title = 'Diving', description = 'No sell prices configured', type = 'error' })
+        return
+    end
+
+    local options = {}
+    for itemName, itemData in pairs(Config.SellPrices) do
+        local hasItem = Bridge.HasItem(itemName, 1)
+        if hasItem then
+            local price = itemData.price
+            local imagePath = "https://cfx-nui-" .. Config.InventoryImagesPath .. itemData.image
+            
+            table.insert(options, {
+                title = (itemName:gsub('^%l', string.upper)),
+                description = string.format('Unit Price: $%s', math.groupdigits and math.groupdigits(price) or price),
+                icon = imagePath,
+                iconColor = '#ffffff',
+                metadata = {
+                    { label = 'Price', value = '$' .. (math.groupdigits and math.groupdigits(price) or price) }
+                },
+                onSelect = function()
+                    SellItem(itemName)
+                end
+            })
+        end
+    end
+
+    if #options == 0 then
+        lib.notify({ title = 'Diving', description = 'You have nothing to sell', type = 'inform' })
+        return
+    end
+
+    lib.registerContext({
+        id = 'diving_sell_menu' .. (zoneIndex and ('_'..zoneIndex) or ''),
+        title = 'Sell Diving Loot',
+        menu = 'diving_job_menu',
+        options = options
+    })
+    lib.showContext('diving_sell_menu' .. (zoneIndex and ('_'..zoneIndex) or ''))
+end
+
+--- Opens a quantity prompt and triggers server event to sell an item.
+--- @param itemName string
+function SellItem(itemName)
+    local itemData = Config.SellPrices and Config.SellPrices[itemName]
+    local unitPrice = itemData and itemData.price or 0
+    if unitPrice <= 0 then
+        lib.notify({ title = 'Diving', description = 'Item cannot be sold', type = 'error' })
+        return
+    end
+    local input = lib.inputDialog('Sell ' .. itemName, {
+        {
+            type = 'number',
+            label = 'Quantity',
+            description = 'Enter amount to sell (0 = sell all)',
+            default = 1,
+            min = 0,
+            max = 1000
+        }
+    })
+    if not input then return end
+    local qty = tonumber(input[1]) or 0
+    TriggerServerEvent('peleg-diving:server:SellItem', itemName, qty)
+end
+
 function RemoveZoneEntities()
     for key, pedData in pairs(zonePeds) do
         if DoesEntityExist(pedData.ped) then
             Bridge.Target.RemovePed(pedData.ped, 'diving_job_menu_shop')
+            Bridge.Target.RemovePed(pedData.ped, 'diving_job_menu_sell')
             Bridge.Target.RemovePed(pedData.ped, 'diving_shop')
             DeleteEntity(pedData.ped)
         end

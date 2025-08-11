@@ -312,6 +312,25 @@ Config.ShopItems = {
     { item = 'diving_gear', price = 5000, label = 'Diving Gear', image = 'diving_gear.png' },
 }
 
+--- Unit sell prices for items obtainable while diving.
+Config.SellPrices = {
+    copper = { price = 50, image = 'copper.png' },
+    plastic = { price = 30, image = 'plastic.png' },
+    metalscrap = { price = 40, image = 'metalscrap.png' },
+    aluminum = { price = 45, image = 'aluminum.png' },
+    steel = { price = 55, image = 'steel.png' },
+    rubber = { price = 25, image = 'rubber.png' },
+    goldbar = { price = 1500, image = 'goldbar.png' },
+    gold_bar = { price = 1500, image = 'goldbar.png' },
+    jewelry = { price = 250, image = 'jewelry.png' },
+    diamond = { price = 1200, image = 'diamond.png' },
+    emerald = { price = 900, image = 'emerald.png' },
+    ruby = { price = 800, image = 'ruby.png' },
+    electronics = { price = 180, image = 'electronics.png' },
+    scrap_metal = { price = 35, image = 'scrap_metal.png' },
+    diamond_ring = { price = 700, image = 'diamond_ring.png' },
+}
+
 -- Experience and Levels
 Config.XP = {
     RareItemFound = 25,        -- Bonus XP per rare item found

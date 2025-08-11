@@ -74,7 +74,7 @@ function StartContainerSpawning(zoneIndex)
             local minDistance = Config.InteractionDistance + 1
 
             for containerId, containerData in pairs(activeContainers) do
-                if not containerData.isOpened and not containerData.shouldStop then
+                if not containerData.shouldStop then
                     local containerCoords = containerData.coords
                     local distance = #(containerCoords - playerCoords)
 
@@ -82,12 +82,12 @@ function StartContainerSpawning(zoneIndex)
                         DrawLightWithRange(containerCoords.x, containerCoords.y, containerCoords.z + 1.0, 255, 0, 0, 5.0, 3.0)
                     end
 
-                    if Config.Target == 'drawtext' and distance <= 20.0 then
+                    if Config.Target == 'drawtext' and distance <= 20.0 and not containerData.isOpened then
                         DrawText3D(containerCoords.x, containerCoords.y, containerCoords.z + 1.5,
                         '[E] Open ' .. containerData.type.label)
                     end
 
-                    if Config.Target == 'drawtext' and distance <= 8 and distance < minDistance then
+                    if Config.Target == 'drawtext' and distance <= 8 and distance < minDistance and not containerData.isOpened then
                         minDistance = distance
                         closestContainerId = containerId
                     end
@@ -327,6 +327,7 @@ function FindValidSpawnPosition(zoneIndex, zone)
 end
 
 function OpenContainer(containerId)
+    Citizen.CreateThread(function()
     local containerData = activeContainers[containerId]
     if not containerData or containerData.isOpened then return end
 
@@ -350,6 +351,7 @@ function OpenContainer(containerId)
     ClearPedTasks(playerPed)
     ClearPedSecondaryTask(playerPed)
     StopAnimTask(playerPed, "WORLD_HUMAN_WELDING", "base", 1.0)
+end)
 end
 
 function RemoveContainer(containerId)
