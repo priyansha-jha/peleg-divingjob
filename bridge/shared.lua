@@ -71,7 +71,6 @@ function Bridge.UsingDrawText()
     return Bridge.TargetSystem == 'drawtext'
 end
 
-
 --- Calculates the player's current diving level based on XP.
 --- @param divingXP number The player's diving XP.
 --- @return number The calculated diving level.

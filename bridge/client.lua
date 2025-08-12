@@ -136,7 +136,6 @@ function Bridge.Target.RemoveEntity(entity, name)
 end
 
 function Bridge.Target.AddPed(ped, option)
-    -- Always use target system for peds regardless of config choice
     if Bridge.TargetSystem == 'drawtext' then
         if GetResourceState('ox_target') == 'started' then
             Bridge.TargetSystem = 'ox'
