@@ -56,6 +56,9 @@ Adujst the path via `Config.InventoryImagesPath`.
   close = true,
   description = 'Scuba mask and tank for underwater exploration',
   consume = 0,
+  client = {
+    event = "peleg-divegear:client:useGear"
+  }
 },
 ```
 

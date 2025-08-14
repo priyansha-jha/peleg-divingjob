@@ -9,18 +9,19 @@ end
 
 if GetResourceState('qbx_core') == 'started' then
     exports.qbx_core:CreateUseableItem('diving_gear', function(source)
-        TriggerClientEvent('qbx_divegear:client:useGear', source)
+        TriggerClientEvent('peleg-divegear:client:useGear', source)
     end)
 elseif GetResourceState('qb-core') == 'started' and QBCore then
     if QBCore.Functions and QBCore.Functions.CreateUseableItem then
         QBCore.Functions.CreateUseableItem('diving_gear', function(source)
-            TriggerClientEvent('qbx_divegear:client:useGear', source)
+            TriggerClientEvent('peleg-divegear:client:useGear', source)
         end)
     end
 elseif GetResourceState('es_extended') == 'started' and ESX then
     if ESX.RegisterUsableItem then
         ESX.RegisterUsableItem('diving_gear', function(source)
-            TriggerClientEvent('qbx_divegear:client:useGear', source)
+            TriggerClientEvent('peleg-divegear:client:useGear', source)
         end)
     end
+elseif GetResourceState('ox_inventory') == 'started' then
 end

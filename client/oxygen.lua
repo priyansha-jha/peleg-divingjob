@@ -215,7 +215,7 @@ local function putOnSuit()
     end
 end
 
-RegisterNetEvent('qbx_divegear:client:useGear', function()
+RegisterNetEvent('peleg-divegear:client:useGear', function()
     if currentGear.enabled then
         takeOffSuit()
     else
