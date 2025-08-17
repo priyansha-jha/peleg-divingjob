@@ -47,7 +47,7 @@ local function IsNearAnyShop(src, radius)
         end
     end
 
-    local fallbackShop = vector3(-2613.54, -216.78, 2.58)
+    local fallbackShop = Config.ShopPed.coords.xyz
     if #(coords - fallbackShop) <= radius then 
         return true 
     end
