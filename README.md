@@ -30,14 +30,12 @@ The resource updates these automatically as players loot containers. Adding sens
 ### Add metadata defaults per framework
 
 #### QBCore
-Add defaults in your `qb-core` player metadata initialization (commonly `qb-core/server/player.lua`). Place the fields alongside your existing metadata defaults.
+Add defaults in your `qb-core` player metadata initialization (commonly `qb-core/server/player.lua`) or if you have the updated version in `qb-core/config.lua`. Place the fields alongside your existing metadata defaults.
 
 ```lua
 --[[ QBCore metadata defaults ]]
-PlayerData.metadata = PlayerData.metadata or {
-  hunger = 100,
-  thirst = 100,
-  divingLevel = 1,
+PlayerData.metadata = PlayerData.metadata
+{
   divingXP = 0,
 }
 ```
